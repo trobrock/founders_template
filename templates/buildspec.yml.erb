@@ -1,0 +1,39 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - gem install founders_template
+      - ft ci install
+
+  pre_build:
+    commands:
+      - $(ft ci export_build_variables)
+      - $(ft ci export_ecr_login)
+      - ft ci pull_latest_image
+
+  build:
+    commands:
+      # Build Docker Images
+      - ft ci build_image app
+      - ft ci build_image web
+
+      # Run Tests
+      - ft ci run_tests
+
+      # Tag Docker Images
+      - ft ci tag_images
+    finally:
+      # Clean up docker compose
+      - docker-compose -f docker-compose.ci.yml logs
+      - docker-compose -f docker-compose.ci.yml down
+
+  post_build:
+    commands:
+      - ft ci post_build
+
+artifacts:
+  files:
+    - web_imagedefinitions.json
+    - worker_imagedefinitions.json
+  name: imagedefinitions
