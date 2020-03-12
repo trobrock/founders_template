@@ -24,6 +24,8 @@ module FoundersTemplate
     desc 'install', 'install the buildspec'
     def install
       template 'buildspec.yml.erb', 'buildspec.yml'
+
+      directory 'ci', 'ci'
     end
   end
 end

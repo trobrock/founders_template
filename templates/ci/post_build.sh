@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+# PLACE ALL YOUR COMMANDS TO RUN DURING POST BUILD BELOW THIS
