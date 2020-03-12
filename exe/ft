@@ -1,3 +1,7 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "founders_template"
+require 'founders_template'
+require 'founders_template/cli'
+
+FoundersTemplate::CLI.start(ARGV)
