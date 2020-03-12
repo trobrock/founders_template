@@ -1,0 +1,22 @@
+name: CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ '2.5', '2.6', '2.7' ]
+        rails: [ 5, 6 ]
+    name: founders_template ruby:${{matrix.ruby}} rails:${{matrix.rails}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3 --gemfile=Gemfile-rails${{matrix.rails}}
+          bundle exec rspec
