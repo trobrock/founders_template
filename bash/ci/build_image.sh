@@ -4,12 +4,14 @@ TARGET="$1"
 
 if [[ "$TARGET" -eq "app" ]]; then
   HAS_DOCKER_IMAGE="$(docker image ls --filter "reference=$APP_REPOSITORY_URI:latest" --format "{{.ID}}" | wc -l)"
-  CACHE_IMAGE="$(if [ $HAS_DOCKER_IMAGE -eq "1" ]; then echo "--cache-from $APP_REPOSITORY_URI:latest" ; fi)"
+  if [ "$HAS_DOCKER_IMAGE" -eq "1" ]; then
+    CACHE_IMAGE="--cache-from $APP_REPOSITORY_URI:latest"
+  fi
 else
   CACHE_IMAGE="--cache-from app:$GIT_COMMIT_SHA"
 fi
 
-echo "Building the $TARGET Docker image..."
+echo "Building the $TARGET Docker image... using cache: $CACHE_IMAGE"
 exec docker build \
   $CACHE_IMAGE \
   --build-arg RAILS_ENV=$RAILS_ENV \

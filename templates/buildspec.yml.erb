@@ -8,7 +8,7 @@ env:
 phases:
   install:
     commands:
-      - gem install founders_template
+      - gem install founders_template -v "<%= version %>"
       - ft ci install
 
   pre_build:

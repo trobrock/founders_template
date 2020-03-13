@@ -57,6 +57,10 @@ module FoundersTemplate
 
     private
 
+    def version
+      VERSION
+    end
+
     def ensure_aws_credentials
       return if aws_credentials?
 
