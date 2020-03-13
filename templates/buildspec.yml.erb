@@ -2,7 +2,9 @@ version: 0.2
 
 env:
   secrets-manager:
+<% if credentials_supported? -%>
     RAILS_MASTER_KEY: <%= app_config.short_name %>/rails/production/credentials_master_key:production
+<% end -%>
     RAILS_SECRET_KEY: <%= app_config.short_name %>/rails/production/secret_key_base:production
 
 phases:
