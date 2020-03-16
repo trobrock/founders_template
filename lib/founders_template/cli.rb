@@ -51,6 +51,7 @@ module FoundersTemplate
 
       template 'buildspec.yml.erb', 'buildspec.yml'
       template 'docker-compose.ci.yml.erb', 'docker-compose.ci.yml'
+      template 'dockerignore.erb', '.dockerignore'
 
       directory 'ci', 'ci'
     end
