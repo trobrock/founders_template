@@ -50,8 +50,9 @@ module FoundersTemplate
       ensure_secret_key
 
       template 'buildspec.yml.erb', 'buildspec.yml'
-      template 'docker-compose.ci.yml.erb', 'docker-compose.ci.yml'
       template 'dockerignore.erb', '.dockerignore'
+      template 'docker-compose.ci.yml.erb', 'docker-compose.ci.yml'
+      template 'docker-sync.yml.erb', 'docker-sync.yml'
 
       directory 'ci', 'ci'
     end

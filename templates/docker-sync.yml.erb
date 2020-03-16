@@ -1,0 +1,20 @@
+version: '2'
+
+options:
+  verbose: false
+
+syncs:
+  <%= app_config.short_name %>:
+    src: './'
+    host_disk_mount_mode: 'cached' # see https://docs.docker.com/docker-for-mac/osxfs-caching/#cached
+    sync_excludes:
+      - '.sass-cache'
+      - '.gitignore'
+      - '.git'
+      - 'tmp/db_data'
+      - 'tmp/cache'
+      - 'tmp/docker_data'
+      - '.docker-sync'
+      - 'docker-sync.yml'
+      - 'docker-compose.yml'
+      - 'terraform'
