@@ -2,7 +2,7 @@
 
 TARGET="$1"
 
-if [[ "$TARGET" -eq "app" ]]; then
+if [[ "$TARGET" == "app" ]]; then
   HAS_DOCKER_IMAGE="$(docker image ls --filter "reference=$APP_REPOSITORY_URI:latest" --format "{{.ID}}" | wc -l)"
   if [ "$HAS_DOCKER_IMAGE" -eq "1" ]; then
     CACHE_IMAGE="--cache-from $APP_REPOSITORY_URI:latest"

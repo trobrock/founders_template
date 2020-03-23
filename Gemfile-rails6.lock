@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    founders_template (0.1.7)
+    founders_template (0.1.8)
       activesupport
       aws-sdk-core
       aws-sdk-ec2
@@ -11,20 +11,20 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.0.2.1)
+    activesupport (6.0.2.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2)
     aws-eventstream (1.0.3)
-    aws-partitions (1.281.0)
-    aws-sdk-core (3.91.0)
+    aws-partitions (1.286.0)
+    aws-sdk-core (3.92.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-ec2 (1.149.0)
+    aws-sdk-ec2 (1.151.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-secretsmanager (1.34.0)
