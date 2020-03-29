@@ -1,0 +1,18 @@
+[
+  {
+    "image": "${app_image}",
+    "memory": ${app_memory},
+    "name": "one_off",
+    "networkMode": "awsvpc",
+    "essential": true,
+    "environment": ${environment},
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${app_log_path}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  }
+]

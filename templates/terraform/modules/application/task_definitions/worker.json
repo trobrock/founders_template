@@ -1,0 +1,49 @@
+[
+  {
+    "image": "${app_image}",
+    "memory": ${worker_app_memory},
+    "name": "worker",
+    "networkMode": "awsvpc",
+    "essential": true,
+    "command": [ "rails", "resque:work" ],
+    "environment": ${environment},
+    "healthCheck": {
+      "command": [ "CMD-SHELL", "ps -ef | grep \"resque\" | grep -v grep" ],
+      "interval": 5,
+      "timeout": 2,
+      "retries": 3,
+      "startPeriod": 30
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${app_log_path}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  },
+  {
+    "image": "${app_image}",
+    "name": "scheduler",
+    "networkMode": "awsvpc",
+    "essential": true,
+    "command": [ "rails", "resque:scheduler" ],
+    "environment": ${environment},
+    "healthCheck": {
+      "command": [ "CMD-SHELL", "ps -ef | grep \"resque-scheduler\" | grep -v grep" ],
+      "interval": 5,
+      "timeout": 2,
+      "retries": 3,
+      "startPeriod": 30
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${app_log_path}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  }
+]

@@ -52,8 +52,13 @@ module FoundersTemplate
       template 'buildspec.yml.erb', 'buildspec.yml'
       template 'dockerignore.erb', '.dockerignore'
       template 'docker-compose.ci.yml.erb', 'docker-compose.ci.yml'
+      template 'docker-compose.yml.erb', 'docker-compose.yml'
       template 'docker-sync.yml.erb', 'docker-sync.yml'
+      template 'Dockerfile.erb', 'Dockerfile'
 
+      install_terraform_project
+
+      directory 'docker', 'docker'
       directory 'ci', 'ci'
     end
 
@@ -61,6 +66,23 @@ module FoundersTemplate
 
     def version
       VERSION
+    end
+
+    def install_terraform_project
+      directory 'terraform', 'terraform'
+
+      template 'terraform-production.tfvars.erb', 'terraform/production/terraform.tfvars'
+      template 'terraform-shared.tfvars.erb', 'terraform/shared/terraform.tfvars'
+
+      gsub_file 'terraform/production/main.tf',
+                /(bucket\s+=\s+)".+-terraform-production"/,
+                %(\\1"#{app_config.slugified_name}-terraform-production")
+      gsub_file 'terraform/production/main.tf',
+                /(dynamodb_table\s+=\s+)".+-terraform-production"/,
+                %(\\1"#{app_config.slugified_name}-terraform-production")
+      gsub_file 'terraform/production/main.tf',
+                /(region\s+=\s+)".+"/,
+                %(\\1"#{app_config.aws_region}")
     end
 
     def ensure_aws_credentials
@@ -88,6 +110,7 @@ module FoundersTemplate
                        default: 'us-east-1'
 
       add_to_envrc AWS_REGION: aws_region
+      add_to_envrc AWS_DEFAULT_REGION: aws_region
 
       profile = <<~TEXT
         [#{app_config.short_name}]
@@ -168,10 +191,18 @@ module FoundersTemplate
     end
 
     def ensure_application_config
-      return if app_config.valid?
+      unless app_config.name
+        app_config.name = ask 'Application Name:'
+        app_config.short_name = ask 'Application Short Name:', default: app_config.short_name
+      end
 
-      app_config.name = ask 'Application Name:'
-      app_config.short_name = ask 'Application Short Name:', default: app_config.short_name
+      app_config.github_org = ask 'GitHub Organization:' unless app_config.github_org
+      app_config.github_repo = ask 'GitHub Repo Name:' unless app_config.github_repo
+
+      unless app_config.valid?
+        error 'There is an error in your config.'
+        exit 1
+      end
 
       template_file app_config
     end

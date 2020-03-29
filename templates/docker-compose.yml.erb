@@ -1,0 +1,75 @@
+version: '3.4'
+
+volumes:
+  <%= app_config.short_name %>:
+    external: true
+
+services:
+  web:
+    image: <%= app_config.short_name %>-web:latest
+    build:
+      context: .
+      target: web
+    ports:
+      - "8080:80"
+    volumes:
+      . ./public:/app/public
+    depends_on:
+      - app
+  app:
+    image: <%= app_config.short_name %>-app:latest
+    build:
+      context: .
+      target: app
+    ports:
+      - "3000:3000"
+    volumes:
+      - <%= app_config.short_name %>:/app:nocopy
+    command: puma -C config/puma.rb
+    environment:
+      REDIS_URL: redis://redis
+      WEBPACKER_DEV_SERVER_HOST: webpacker
+    depends_on:
+      - db
+      - redis
+  webpacker:
+    image: <%= app_config.short_name %>-app:latest
+    ports:
+      - "3035:3035"
+    volumes:
+      - <%= app_config.short_name %>:/app:nocopy
+    command: bin/webpack-dev-server
+    environment:
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+    depends_on:
+      - app
+  worker:
+    image: <%= app_config.short_name %>-app:latest
+    volumes:
+      - <%= app_config.short_name %>:/app:nocopy
+    command: rails resque:work
+    environment:
+      REDIS_URL: redis://redis
+      QUEUE: '*'
+    depends_on:
+      - app
+  scheduler:
+    image: <%= app_config.short_name %>-app:latest
+    volumes:
+      - <%= app_config.short_name %>:/app:nocopy
+    command: rails resque:scheduler
+    environment:
+      REDIS_URL: redis://redis
+    depends_on:
+      - app
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+      - ./tmp/db_data:/var/lib/postgresql/data
+  redis:
+    image: redis:5.0.5-alpine
+  mailcatcher:
+    image: schickling/mailcatcher
+    command: mailcatcher --no-quit --foreground --ip=0.0.0.0 -v
+    ports:
+      - "1080:1080"

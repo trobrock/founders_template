@@ -1,0 +1,41 @@
+[
+  {
+    "image": "${app_image}",
+    "memory": ${app_memory},
+    "name": "app",
+    "networkMode": "awsvpc",
+    "essential": true,
+    "command": [ "puma", "-C", "config/puma.rb" ],
+    "environment": ${environment},
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${app_log_path}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  },
+  {
+    "image": "${web_image}",
+    "memory": 256,
+    "name": "web",
+    "networkMode": "awsvpc",
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80,
+        "protocol": "tcp"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${web_log_path}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  }
+]
