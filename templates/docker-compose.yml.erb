@@ -13,7 +13,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      . ./public:/app/public
+      - ./public:/app/public
     depends_on:
       - app
   app:
