@@ -1,0 +1,9 @@
+terraform {
+  backend "s3" {
+    encrypt        = true
+    bucket         = "<%= app_config.slugified_name %>-terraform-production"
+    dynamodb_table = "<%= app_config.slugified_name %>-terraform-production"
+    region         = "<%= app_config.aws_region %>"
+    key            = "statefile"
+  }
+}

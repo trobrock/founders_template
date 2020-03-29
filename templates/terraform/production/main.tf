@@ -28,17 +28,6 @@ locals {
 EOF
 }
 
-# You MUST run the TF files in the "shared" environment before this will work
-terraform {
-  backend "s3" {
-    encrypt        = true
-    bucket         = "rails-app-terraform-production"
-    dynamodb_table = "rails-app-terraform-production"
-    region         = "us-east-1"
-    key            = "statefile"
-  }
-}
-
 module "vpc" {
   source = "git://github.com/trobrock/terraform-vpc.git?ref=v1.0.0"
 
