@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    founders_template (0.2.3)
+    founders_template (0.3.0)
       activesupport
       aws-sdk-core
       aws-sdk-ec2

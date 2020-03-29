@@ -11,7 +11,7 @@ require 'yaml'
 require 'founders_template/utils'
 require 'founders_template/config_file'
 
-REQUIRED_SYSTEM_TOOLS = %w( direnv ).freeze
+REQUIRED_SYSTEM_TOOLS = %w( direnv chamber ).freeze
 SCRIPT_PATH = File.expand_path(File.join(__dir__, '..', '..', 'bash')).freeze
 CREDENTIALS_PATH = 'config/credentials'
 CREDENTIALS_KEY_FILE = File.join(CREDENTIALS_PATH, 'production.key').freeze
@@ -48,6 +48,7 @@ module FoundersTemplate
       ensure_aws_credentials
       ensure_credentials_key
       ensure_secret_key
+      ensure_github_oauth_token
 
       template 'buildspec.yml.erb', 'buildspec.yml'
       template 'dockerignore.erb', '.dockerignore'
@@ -73,7 +74,24 @@ module FoundersTemplate
 
       template 'terraform-production-backend.tf.erb', 'terraform/production/backend.tf'
       template 'terraform-production.tfvars.erb', 'terraform/production/terraform.tfvars'
+      template 'terraform-production-envrc.erb', 'terraform/production/.envrc'
       template 'terraform-shared.tfvars.erb', 'terraform/shared/terraform.tfvars'
+    end
+
+    def ensure_github_oauth_token
+      chamber_write(:github_token, ask('GitHub Oauth Token:')) unless chamber_key?(:github_token)
+    end
+
+    def chamber_key?(key)
+      system("chamber read #{chamber_repo_key} #{key} > /dev/null 2>&1")
+    end
+
+    def chamber_write(key, value)
+      system("chamber write #{chamber_repo_key} #{key} #{value} > /dev/null 2>&1")
+    end
+
+    def chamber_repo_key
+      "#{app_config.slugified_name}-terraform"
     end
 
     def ensure_aws_credentials
