@@ -17,6 +17,9 @@ COPY vendor ./vendor/
 ARG RAILS_ENV=development
 ENV RAILS_ENV=$RAILS_ENV
 
+# Fix for sassc issue https://northsail.io/articles/ruby-sassc-illegal-instruction
+RUN bundle config --local build.sassc --disable-march-tune-native
+
 RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ]; then bundle install --jobs 4 --deployment --without development test; else bundle install --jobs 4 --path vendor/bundle; fi
 
 COPY package.json* ./
