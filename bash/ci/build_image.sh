@@ -14,6 +14,7 @@ fi
 echo "Building the $TARGET Docker image... using cache: $CACHE_IMAGE"
 exec docker build \
   $CACHE_IMAGE \
+  --build-arg GIT_COMMIT_SHA=$GIT_COMMIT_SHA \
   --build-arg RAILS_ENV=$RAILS_ENV \
   --build-arg DATABASE_URL=$DATABASE_URL \
   --build-arg REDIS_URL=$REDIS_URL \
