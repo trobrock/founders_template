@@ -49,6 +49,9 @@ FROM builder as app
 
 ENV RAILS_LOG_TO_STDOUT=1
 
+ARG GIT_COMMIT_SHA=""
+ENV GIT_COMMIT_SHA=$GIT_COMMIT_SHA
+
 ARG RAILS_MASTER_KEY
 RUN if [ ! -z "$RAILS_MASTER_KEY" ] ; then echo "$RAILS_MASTER_KEY" > config/credentials/$RAILS_ENV.key ; fi
 
